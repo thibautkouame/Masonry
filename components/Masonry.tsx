@@ -1,12 +1,20 @@
-import React from 'react';
+"use client"
+
+import React, { useState } from 'react';
 import Announcement from './seraui/announcement';
-import { ArrowRightIcon, ArrowUpRightIcon, CommandIcon, ContactIcon, GithubIcon, HomeIcon, Link, SearchIcon, Zap } from 'lucide-react';
+import { ArrowRightIcon, ArrowUpRightIcon, CommandIcon, ContactIcon, GithubIcon, HomeIcon, Link, SearchIcon, SparklesIcon, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import Search from '@/components/ui/search';
 import { Input } from './ui/input';
 import GlowCard from './ui/spotlight-card';
 import Image from 'next/image';
 export default function Masonry() {
+  const [activeFilter, setActiveFilter] = useState<'all' | 'new'>('all');
+
+  const handleFilterChange = (filter: 'all' | 'new') => {
+    setActiveFilter(filter);
+  };
+
   return (
     <div className="min-h-screen w-full bg-black relative flex flex-col items-center">
       {/* Crimson Core Glow */}
@@ -28,16 +36,23 @@ export default function Masonry() {
       />
       <section className='w-full h-full flex flex-col items-center p-10 bg-red-500/5 gap-8'>
         <Navbar />
-        <div className="relative z-10 pt-35 flex flex-col items-center gap-6">
+        <div className="relative z-10 pt-20 flex flex-col items-center gap-6">
           <h1 className='text-white text-center text-4xl font-bold'>Masonry</h1>
           <div className='flex flex-col items-center gap-4 hover:scale-105 transition-all duration-300'>
-            <div className='bg-black/60 backdrop-blur-sm border-1 border-white/50 rounded-full p-3 w-auto flex items-center justify-center gap-2'>
+            {/* <div className='bg-green-100 backdrop-blur-sm border-1 border-white/50 rounded-full p-3 w-auto flex items-center justify-center gap-2'>
               <span className='bg-green-500 rounded-full w-1 h-1 box-shadow-lg animate-ping'></span>
-              <h6 className='text-white text-center text-sm'>Get our latest discoveries</h6>
+              <h6 className='text-black bold text-center text-sm'>Get our latest discoveries</h6>
               <Zap className='w-3 h-3 text-orange-500' />
-              <h6 className='text-white text-center text-sm'>Learn more</h6>
+              <h6 className='text-black text-center text-sm'>Learn more</h6>
               <ArrowRightIcon className='w-3 h-3 text-white' />
-            </div>
+            </div> */}
+            <Announcement variant="gradient">
+              <div className="flex items-center gap-2">
+                <span className='bg-green-900 rounded-full w-1 h-1 box-shadow-lg animate-ping'></span>
+                <h1>Get our latest discoveries</h1>
+                <h6>Learn more</h6>
+              </div>
+            </Announcement>
           </div>
           <div className='flex flex-col items-center gap-4 w-1/2'>
             <h1 className='text-white text-center text-6xl font-bold'>All the most important React frontend Libraries in one place.</h1>
@@ -55,7 +70,7 @@ export default function Masonry() {
         </div>
         {/* Libraries list */}
         <div className='flex flex-col gap-8 z-10 relative'>
-          <h1 className='text-white text-left text-2xl font-bold'>Libraries</h1>
+          <h1 className='text-white text-left text-2xl font-bold'>React frontend Libraries</h1>
           {/* <div className="relative p-px rounded-2xl bg-gradient-to-r from-orange-500 via-purple-600 to-pink-600 shadow-lg shadow-purple-500/20 dark:shadow-purple-600/30 transition-shadow duration-300 hover:shadow-purple-500/40 dark:hover:shadow-purple-600/50 focus-within:shadow-purple-500/40 dark:focus-within:shadow-purple-600/50">
               <div className="flex items-center w-full px-4 py-2 bg-white/80 dark:bg-gray-900/90 rounded-[15px]">
                   <SearchIcon className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
@@ -79,74 +94,214 @@ export default function Masonry() {
           {/* <div className='rounded-full bg-gradient-to-r from-orange-500 via-purple-600 to-pink-600 shadow-lg shadow-purple-500/20 dark:shadow-purple-600/30 transition-shadow duration-300 hover:shadow-purple-500/40 dark:hover:shadow-purple-600/50 focus-within:shadow-purple-500/40 dark:focus-within:shadow-purple-600/50'>
             <Input type="text" placeholder="Type somthing here..." className='bg-white/10 outline-none cursor-pointer hover:bg-red-500/5 backdrop-blur-sm border-0 text-white px-4 py-2 h-10 rounded-full transition-colors w-full placeholder:text-white' />
           </div> */}
-          <div className='flex flex-row w-full relative'>
-            <input type="text" placeholder="Type somthing here..." className='bg-black/40 border-1 border-white/20 outline-none cursor-pointer backdrop-blur-sm text-white px-4 py-2 h-10 rounded-full transition-colors w-full placeholder:text-white' />
+          <div className='flex flex-row w-full relative items-center'>
+            <input
+              type="text"
+              placeholder="Type somthing here..."
+              className='bg-black/40 border-1 border-white/20 outline-none backdrop-blur-sm text-white px-4 py-2 h-16 rounded-full transition-colors w-full placeholder:text-white pr-14'
+            />
+            <span className="absolute right-6 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-white/70"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <circle cx="11" cy="11" r="7" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" strokeLinecap="round" />
+              </svg>
+            </span>
           </div>
-                     <div className='grid grid-cols-4 gap-5 w-full'>
-              <GlowCard 
-                className='cursor-pointer' 
-                showNew={true} 
-                bottomRightImage="/images/tk-1.png"
-                title="React"
-                description="A JavaScript library for building user interfaces."
-              />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={false} 
-               bottomRightImage="/images/tk.png"
-               title="Vue.js"
-               description="The Progressive JavaScript Framework."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={true} 
-               bottomRightImage="/images/tk-1.png"
-               title="Angular"
-               description="Platform for building mobile and desktop web applications."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={false} 
-               bottomRightImage="/images/tk.png"
-               title="Svelte"
-               description="Cybernetically enhanced web apps."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={false} 
-               bottomRightImage="/images/tk-1.png"
-               title="Next.js"
-               description="The React Framework for Production."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={true} 
-               bottomRightImage="/images/tk.png"
-               title="Nuxt.js"
-               description="The Intuitive Vue Framework."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={false} 
-               bottomRightImage="/images/tk-1.png"
-               title="Gatsby"
-               description="Build blazing fast, modern apps and websites."
-             />
-             
-             <GlowCard 
-               className='cursor-pointer' 
-               showNew={false} 
-               bottomRightImage="/images/tk.png"
-               title="Remix"
-               description="Full stack web framework focused on web standards."
-             />
-           </div>
+          <div className="flex items-center justify-center">
+            <div className="flex bg-black/40 backdrop-blur-sm border border-white/20 rounded-full p-1">
+              <button
+                onClick={() => handleFilterChange('all')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${activeFilter === 'all'
+                    ? 'bg-white/10 text-white'
+                    : 'text-white/60 hover:text-white hover:bg-white/10'
+                  }`}
+              >
+                <span>All</span>
+              </button>
+              <button
+                onClick={() => handleFilterChange('new')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-200 ${activeFilter === 'new'
+                    ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 backdrop-blur-sm text-white'
+                    : 'text-white/60 hover:text-white hover:bg-white/10'
+                  }`}
+              >
+                <SparklesIcon className='w-4 h-4 text-white' /> <span>New</span>
+              </button>
+            </div>
+          </div>
+          <div className='grid grid-cols-4 gap-5 w-full'>
+            <GlowCard
+              showNew={true}
+              bottomRightImage="https://avatars.githubusercontent.com/u/220806596?s=48&v=4"
+              title="Sera UI"
+              description="A React UI library for building user interfaces."
+              href="https://seraui.com/"
+            />
+
+            <GlowCard
+              showNew={true}
+              bottomRightImage="https://patterncraft.fun/favicon.svg"
+              title="PatternCraft"
+              description="Provide Professional-grade background patterns and gradients. Easily copy the code and seamlessly integrate it into your projects."
+              href="https://patterncraft.fun/"
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="https://cdn-1.webcatalog.io/catalog/react-flow/react-flow-icon-filled-256.webp?v=1718805903776"
+              title="React Flow"
+              description="The Progressive JavaScript Framework."
+              href="https://reactflow.dev/"
+            />
+
+
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Svelte"
+              description="Cybernetically enhanced web apps."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+            <GlowCard
+              showNew={true}
+              bottomRightImage="https://avatars.githubusercontent.com/u/220806596?s=48&v=4"
+              title="Sera UI"
+              description="A React UI library for building user interfaces."
+              href="https://seraui.com/"
+            />
+
+            <GlowCard 
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />
+
+            <GlowCard
+              showNew={false}
+              bottomRightImage="/images/tk.png"
+              title="Remix"
+              description="Full stack web framework focused on web standards."
+            />  
+          </div>
 
         </div>
       </section>

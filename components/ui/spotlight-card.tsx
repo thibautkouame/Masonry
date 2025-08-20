@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react';
 import { useEffect, useRef, ReactNode, CSSProperties } from 'react';
-import { Star, Sparkles, ArrowUpRightIcon } from 'lucide-react';
+import { Star, Sparkles, ArrowUpRightIcon, Copy } from 'lucide-react';
 import Image from 'next/image';
 
 interface GlowCardProps {
@@ -16,6 +16,7 @@ interface GlowCardProps {
     bottomRightImage?: string; // URL or path to the image to display in bottom right
     title?: string; // Title of the card
     description?: string; // Description of the card
+    href?: string; // Optional link URL
 }
 
 const glowColorMap = {
@@ -43,7 +44,8 @@ const GlowCard: React.FC<GlowCardProps> = ({
     showNew = false,
     bottomRightImage,
     title,
-    description
+    description,
+    href
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const innerRef = useRef<HTMLDivElement>(null);
@@ -93,11 +95,11 @@ const GlowCard: React.FC<GlowCardProps> = ({
         calc(var(--y, 0) * 1px),
         hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.1)), transparent
       )`,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
             backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
             backgroundPosition: '50% 50%',
             backgroundAttachment: 'fixed',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             position: 'relative' as const,
             touchAction: 'none' as const,
         };
@@ -177,18 +179,21 @@ const GlowCard: React.FC<GlowCardProps> = ({
                 data-glow
                 style={getInlineStyles()}
                 className={`
-          ${getSizeClasses()}
-          ${!customSize ? 'aspect-[3/4]' : ''}
-          rounded-2xl 
-          relative 
-          grid 
-          grid-rows-[1fr_auto] 
-          shadow-[0_1rem_2rem_-1rem_black] 
-          p-4 
-          gap-4 
-          backdrop-blur-[5px]
-          ${className}
-        `}
+                  ${getSizeClasses()}
+                  ${!customSize ? 'aspect-[3/4]' : ''}
+                  rounded-2xl 
+                  relative 
+                  grid 
+                  grid-rows-[1fr_auto] 
+                  shadow-[0_1rem_2rem_-1rem_rgba(0,0,0,0.2)] 
+                  p-4 
+                  gap-4 
+                  backdrop-blur-[5px]
+                  hover:scale-105
+                  transition-transform
+                  duration-200
+                  ${className}
+                `}
             >
                 <div ref={innerRef} data-glow></div>
 
@@ -199,30 +204,40 @@ const GlowCard: React.FC<GlowCardProps> = ({
                             <span className="text-sm font-medium text-white">New</span>
                         </div>
                     )}
-                    <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
-                        <Star className="w-4 h-4  text-purple-600" />
+                    <div className="hover:bg-yellow-500 cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                        <Star className="w-4 h-4  text-purple-600 hover:text-white" />
                     </div>
-                    <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
-                        <ArrowUpRightIcon className="w-4 h-4 text-purple-600" />
+                    {href ? (
+                        <a href={href} target="_blank" className="cursor-pointer w-8 h-8 rounded-full bg-purple-600 backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-colors">
+                            <ArrowUpRightIcon className="w-4 h-4 text-white hover:scale-150 hover:text-white transition-transform" />
+                        </a>
+                    ) : (
+                        <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                            <ArrowUpRightIcon className="w-4 h-4 text-purple-600" />
+                        </div>
+                    )}
+                    <div className="cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                        <Copy className="w-4 h-4  text-purple-600 hover:text-white" />
                     </div>
                 </div>
 
                 {bottomRightImage && (
-                    <div className="absolute bottom-3 right-3 w-10 h-10 rounded-3xl object-cover shadow-lg">
+                    <div className="absolute bg-white flex flex-row items-center justify-end  bottom-3 right-3 w-50 h-10 rounded-3xl object-cover shadow-lg">
+                        <h6 className='text-black font-bold text-sm'>{title}</h6>
                         <Image
                             src={bottomRightImage}
                             alt="Bottom right image"
-                            className="w-full h-full rounded-3xl object-cover shadow-lg"
-                            width={100}
-                            height={100}
+                            className=" bg-white p-1 object-cover rounded-3xl "
+                            width={40}
+                            height={40}
                         />
                     </div>
                 )}
 
                 {title && description ? (
                     <div className="text-white">
-                        <h3 className="text-xl font-bold mb-2">{title}</h3>
-                        <p className="text-gray-300 max-w-3/4">{description}</p>
+                        {/* <h3 className="text-xl font-bold mb-2">{title}</h3> */}
+                        <p className="text-gray-200 max-w-3/4">{description}</p>
                     </div>
                 ) : (
                     children
