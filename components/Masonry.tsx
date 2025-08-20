@@ -144,7 +144,7 @@ export default function Masonry() {
               bottomRightImage="https://avatars.githubusercontent.com/u/220806596?s=48&v=4"
               title="Sera UI"
               description="A React UI library for building user interfaces."
-              href="https://seraui.com/"
+              href="https://seraui.seraprogrammer.com/"
               centerImage="https://avatars.githubusercontent.com/u/220806596?s=48&v=4"
             />
 

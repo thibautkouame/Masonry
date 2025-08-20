@@ -1,8 +1,11 @@
 'use client'
 import * as React from 'react';
-import { useEffect, useRef, ReactNode, CSSProperties } from 'react';
+import { useEffect, useRef, ReactNode, CSSProperties, useState, useCallback } from 'react';
 import { Star, Sparkles, ArrowUpRightIcon, Copy } from 'lucide-react';
 import Image from 'next/image';
+import { Cursor } from '@/components/core/cursor';
+import { MouseIcon } from '@/components/core/mouse-icon';
+
 
 interface GlowCardProps {
     children?: ReactNode;
@@ -51,6 +54,9 @@ const GlowCard: React.FC<GlowCardProps> = ({
 }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const innerRef = useRef<HTMLDivElement>(null);
+    const [showCursor, setShowCursor] = useState(false);
+    const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+    const [hoveredElement, setHoveredElement] = useState<string | null>(null);
 
     useEffect(() => {
         const syncPointer = (e: PointerEvent) => {
@@ -67,6 +73,54 @@ const GlowCard: React.FC<GlowCardProps> = ({
         document.addEventListener('pointermove', syncPointer);
         return () => document.removeEventListener('pointermove', syncPointer);
     }, []);
+
+    const handleMouseEnter = (e: React.MouseEvent) => {
+        // Immediate cursor show for better responsiveness
+        setShowCursor(true);
+        document.body.style.cursor = 'none';
+        // Update position immediately
+        setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseMove = useCallback((e: React.MouseEvent) => {
+        // Use requestAnimationFrame for smoother cursor following
+        requestAnimationFrame(() => {
+            setCursorPosition({ 
+                x: e.clientX, 
+                y: e.clientY 
+            });
+        });
+    }, []);
+
+    const handleMouseLeave = () => {
+        setShowCursor(false);
+        document.body.style.cursor = 'auto';
+    };
+
+    // Function to show custom cursor (always visible when on card)
+    const showCustomCursor = () => {
+        setShowCursor(true);
+        document.body.style.cursor = 'none';
+    };
+
+    // Function to handle interactive element hover - optimized for speed
+    const handleNewBadgeHover = () => {
+        requestAnimationFrame(() => setHoveredElement('new'));
+    };
+    const handleStarHover = () => {
+        requestAnimationFrame(() => setHoveredElement('star'));
+    };
+    const handleLinkHover = () => {
+        requestAnimationFrame(() => setHoveredElement('link'));
+    };
+    const handleCopyHover = () => {
+        requestAnimationFrame(() => setHoveredElement('copy'));
+    };
+
+    // Function to handle interactive element leave - optimized for speed
+    const handleInteractiveLeave = () => {
+        requestAnimationFrame(() => setHoveredElement(null));
+    };
 
     const { base, spread } = glowColorMap[glowColor];
 
@@ -180,6 +234,9 @@ const GlowCard: React.FC<GlowCardProps> = ({
                 ref={cardRef}
                 data-glow
                 style={getInlineStyles()}
+                onMouseEnter={handleMouseEnter}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
                 className={`
                   ${getSizeClasses()}
                   ${!customSize ? 'aspect-[3/4]' : ''}
@@ -194,31 +251,56 @@ const GlowCard: React.FC<GlowCardProps> = ({
                   hover:scale-105
                   transition-transform
                   duration-200
+                  ${showCursor ? 'cursor-none' : ''}
                   ${className}
                 `}
             >
                 <div ref={innerRef} data-glow></div>
 
+
+                {/* NEW BADGE, STAR, COPY, LINK */}
                 <div className="absolute top-3 right-3 flex flex-col gap-2 justify-end items-end">
                     {showNew && (
-                        <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 backdrop-blur-sm rounded-3xl px-3 py-1 w-20 flex items-center gap-2 shadow-sm border-none outline-none">
+                        <div 
+                            className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 backdrop-blur-sm rounded-3xl px-3 py-1 w-20 flex items-center gap-2 shadow-sm border-none outline-none cursor-pointer"
+                            onMouseEnter={handleNewBadgeHover}
+                            onMouseLeave={handleInteractiveLeave}
+                        >
                             <Sparkles className="w-4 h-4 text-white" />
                             <span className="text-sm font-medium text-white">New</span>
                         </div>
                     )}
-                    <div className="hover:bg-yellow-500 cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                    <div 
+                        className="hover:bg-yellow-500 cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center"
+                        onMouseEnter={handleStarHover}
+                        onMouseLeave={handleInteractiveLeave}
+                    >
                         <Star className="w-4 h-4  text-purple-600 hover:text-white" />
                     </div>
                     {href ? (
-                        <a href={href} target="_blank" className="cursor-pointer w-8 h-8 rounded-full bg-purple-600 backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-colors">
+                        <a 
+                            href={href} 
+                            target="_blank" 
+                            className="cursor-pointer w-8 h-8 rounded-full bg-purple-600 backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-colors"
+                            onMouseEnter={handleLinkHover}
+                            onMouseLeave={handleInteractiveLeave}
+                        >
                             <ArrowUpRightIcon className="w-4 h-4 text-white hover:scale-150 hover:text-white transition-transform" />
                         </a>
                     ) : (
-                        <div className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                        <div 
+                            className="w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+                            onMouseEnter={handleLinkHover}
+                            onMouseLeave={handleInteractiveLeave}
+                        >
                             <ArrowUpRightIcon className="w-4 h-4 text-purple-600" />
                         </div>
                     )}
-                    <div className="cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                    <div 
+                        className="cursor-pointer w-8 h-8 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center"
+                        onMouseEnter={handleCopyHover}
+                        onMouseLeave={handleInteractiveLeave}
+                    >
                         <Copy className="w-4 h-4  text-purple-600 hover:text-white" />
                     </div>
                 </div>
@@ -230,21 +312,21 @@ const GlowCard: React.FC<GlowCardProps> = ({
                             src={bottomRightImage}
                             alt="Bottom right image"
                             className=" bg-white p-1 object-cover rounded-3xl "
-                            width={40}
-                            height={40}
+                            width={30}
+                            height={30}
                         />
                     </div>
                 )}
 
                 {centerImage && (
                     <div className="absolute inset-0 flex items-center justify-center -z-10">
-                        <div className="relative w-32 h-32 rounded-2xl overflow-hidden shadow-lg opacity-40">
+                        <div className="relative w-20 h-20 rounded-2xl overflow-hidden shadow-lg opacity-40">
                             <Image
                                 src={centerImage}
                                 alt="Center image"
                                 className="object-cover"
                                 fill
-                                sizes="128px"
+                                sizes="80px"
                             />
                         </div>
                     </div>
@@ -259,6 +341,39 @@ const GlowCard: React.FC<GlowCardProps> = ({
                     children
                 )}
             </div>
+
+                            {/* Custom cursor - always visible when on card */}
+                {showCursor && (
+                    <Cursor
+                        variants={{
+                            initial: { scale: 0.9, opacity: 0 },
+                            animate: { scale: 1, opacity: 1 },
+                            exit: { scale: 0.9, opacity: 0 },
+                        }}
+                        transition={{
+                            ease: 'easeOut',
+                            duration: 0.05,
+                        }}
+                        style={{
+                            left: cursorPosition.x - 13,
+                            top: cursorPosition.y - 13,
+                            transform: 'translate(-50%, -50%)',
+                        }}
+                        className="fixed pointer-events-none z-[99999] will-change-transform"
+                    >
+                        <div>
+                            <MouseIcon className={`h-6 w-6 transition-all duration-75 ${hoveredElement ? 'scale-110 text-blue-500' : 'text-green-500'}`} />
+                            <div className={`ml-4 mt-1 rounded-[4px] px-2 py-0.5 text-neutral-50 text-xs transition-all duration-75 ${hoveredElement ? 'bg-blue-500' : 'bg-green-500'}`}>
+                                {hoveredElement ? 
+                                    (hoveredElement === 'new' ? 'New' :
+                                     hoveredElement === 'star' ? 'Add to favorites' :
+                                     hoveredElement === 'link' ? 'Visit' :
+                                     hoveredElement === 'copy' ? 'Copy' : 'Card') 
+                                    : (title || 'Card')}
+                            </div>
+                        </div>
+                    </Cursor>
+                )}
         </>
     );
 };
