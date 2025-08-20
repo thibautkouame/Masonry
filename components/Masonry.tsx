@@ -2,12 +2,14 @@
 
 import React, { useState } from 'react';
 import Announcement from './seraui/announcement';
-import { ArrowRightIcon, ArrowUpRightIcon, CommandIcon, ContactIcon, GithubIcon, HomeIcon, Link, SearchIcon, SparklesIcon, Zap } from 'lucide-react';
+import { ArrowRightIcon, ArrowUpRightIcon, Coffee, CommandIcon, ContactIcon, CopyIcon, GithubIcon, HomeIcon, Link, SearchIcon, SparklesIcon, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import Search from '@/components/ui/search';
 import { Input } from './ui/input';
 import GlowCard from './ui/spotlight-card';
 import Image from 'next/image';
+
+
 export default function Masonry() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'new'>('all');
 
@@ -143,6 +145,7 @@ export default function Masonry() {
               title="Sera UI"
               description="A React UI library for building user interfaces."
               href="https://seraui.com/"
+              centerImage="https://avatars.githubusercontent.com/u/220806596?s=48&v=4"
             />
 
             <GlowCard
@@ -151,11 +154,14 @@ export default function Masonry() {
               title="PatternCraft"
               description="Provide Professional-grade background patterns and gradients. Easily copy the code and seamlessly integrate it into your projects."
               href="https://patterncraft.fun/"
+
+              centerImage="https://patterncraft.fun/favicon.svg"
             />
 
             <GlowCard
               showNew={false}
               bottomRightImage="https://cdn-1.webcatalog.io/catalog/react-flow/react-flow-icon-filled-256.webp?v=1718805903776"
+              centerImage='https://cdn-1.webcatalog.io/catalog/react-flow/react-flow-icon-filled-256.webp?v=1718805903776'
               title="React Flow"
               description="The Progressive JavaScript Framework."
               href="https://reactflow.dev/"
@@ -319,8 +325,8 @@ const Navbar = () => {
           </div>
           <nav className="hidden md:flex space-x-8 flex-row items-center justify-center">
             <a href="#" className="text-white hover:text-red-400 transition-colors"><HomeIcon className='w-4 h-4 text-white' /></a>
-            <a href="#" className="text-white hover:text-red-400 transition-colors">Favorites</a>
-            <a href="#" className="text-white hover:text-red-400 transition-colors">Contact</a>
+            {/* <a href="#" className="text-white hover:text-red-400 transition-colors">fav</a> */}
+            <a href="#" className="text-white hover:text-red-400 transition-colors"><Coffee className='w-4 h-4 text-white' /></a>
           </nav>
         </div>
       </div>

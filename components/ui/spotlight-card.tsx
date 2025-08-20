@@ -14,6 +14,7 @@ interface GlowCardProps {
     customSize?: boolean; // When true, ignores size prop and uses width/height or className
     showNew?: boolean; // When true, shows the "New" badge
     bottomRightImage?: string; // URL or path to the image to display in bottom right
+    centerImage?: string; // URL or path to the image to display in center
     title?: string; // Title of the card
     description?: string; // Description of the card
     href?: string; // Optional link URL
@@ -43,6 +44,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
     customSize = false,
     showNew = false,
     bottomRightImage,
+    centerImage,
     title,
     description,
     href
@@ -95,7 +97,7 @@ const GlowCard: React.FC<GlowCardProps> = ({
         calc(var(--y, 0) * 1px),
         hsl(var(--hue, 210) calc(var(--saturation, 100) * 1%) calc(var(--lightness, 70) * 1%) / var(--bg-spot-opacity, 0.1)), transparent
       )`,
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
             backgroundSize: 'calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))',
             backgroundPosition: '50% 50%',
             backgroundAttachment: 'fixed',
@@ -231,6 +233,20 @@ const GlowCard: React.FC<GlowCardProps> = ({
                             width={40}
                             height={40}
                         />
+                    </div>
+                )}
+
+                {centerImage && (
+                    <div className="absolute inset-0 flex items-center justify-center -z-10">
+                        <div className="relative w-32 h-32 rounded-2xl overflow-hidden shadow-lg opacity-40">
+                            <Image
+                                src={centerImage}
+                                alt="Center image"
+                                className="object-cover"
+                                fill
+                                sizes="128px"
+                            />
+                        </div>
                     </div>
                 )}
 
